@@ -6,9 +6,9 @@ import lombok.Data;
 @Data
 public class Result {
 
-    private String message;
-    private Object data;
     private Integer code;
+    private Object data;
+    private String message;
 
 
         public static Result success() {
