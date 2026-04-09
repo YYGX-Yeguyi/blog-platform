@@ -8,9 +8,9 @@ import java.time.LocalDateTime;
 @TableName("category")
 public class Category {
 
-    private int id;
+    private Integer id;
     private String name;
-    private int sortOrder;
+    private Integer sortOrder;
     private LocalDateTime createTime ;
 
 }

@@ -17,3 +17,4 @@ blog-ui/.env.local
 .DS_Store
 Thumbs.db
 blog-core/src/main/resources/application.properties
+blog-core/src/main/resources/application.properties

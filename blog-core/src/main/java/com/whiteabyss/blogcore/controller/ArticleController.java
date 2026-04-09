@@ -2,6 +2,7 @@ package com.whiteabyss.blogcore.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.whiteabyss.blogcore.annotation.LoginRequired;
 import com.whiteabyss.blogcore.dto.Result;
 import com.whiteabyss.blogcore.entity.Article;
 import com.whiteabyss.blogcore.service.ArticleService;
@@ -52,6 +53,7 @@ public class ArticleController {
 
     // 发布或更新文章（需要登录）
     @PostMapping("/save")
+    @LoginRequired
     public Result save(@RequestBody Article article) {
         if (article.getId() == null) {
             article.setViewCount(0);
@@ -63,8 +65,20 @@ public class ArticleController {
 
     // 删除文章
     @DeleteMapping("/delete/{id}")
+    @LoginRequired
     public Result delete(@PathVariable Integer id) {
-        articleService.removeById(id);
-        return Result.success();
+        boolean exists = articleService.lambdaQuery()
+                .eq(Article::getId, id)
+                .exists();
+
+        if (!exists) {
+            return Result.error("文章不存在");
+        }
+        boolean removed = articleService.removeById(id);
+        if (removed) {
+            return Result.success("删除成功");
+        } else {
+            return Result.error("删除失败");
+        }
     }
 }
