@@ -81,4 +81,33 @@ public class ArticleController {
             return Result.error("删除失败");
         }
     }
+
+    @PutMapping("/update")
+    @LoginRequired
+    public Result update(@RequestBody Article article) {
+        // 1. 检查 id 是否为空
+        if (article.getId() == null) {
+            return Result.error("文章ID不能为空");
+        }
+
+        // 2. 检查文章是否存在
+        Article existingArticle = articleService.getById(article.getId());
+        if (existingArticle == null) {
+            return Result.error("文章不存在");
+        }
+
+        // 3. 只更新允许修改的字段（防止覆盖不该覆盖的字段）
+        existingArticle.setTitle(article.getTitle());
+        existingArticle.setContent(article.getContent());
+        existingArticle.setSummary(article.getSummary());
+        existingArticle.setCategoryId(article.getCategoryId());
+        existingArticle.setStatus(article.getStatus());
+        existingArticle.setCoverUrl(article.getCoverUrl());
+        existingArticle.setIsTop(article.getIsTop()); 
+
+        // 4. 执行更新（注意：用 updateById，不是 saveOrUpdate）
+        articleService.updateById(existingArticle);
+
+        return Result.success();
+    }
 }
